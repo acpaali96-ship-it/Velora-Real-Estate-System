@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: velora_postgres
+    environment:
+      POSTGRES_USER: velora_user
+      POSTGRES_PASSWORD: velora_password
+      POSTGRES_DB: velora_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - velora_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: velora_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@velora.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - velora_network
+
+volumes:
+  postgres_data:
+
+networks:
+  velora_network:
+    driver: bridge
